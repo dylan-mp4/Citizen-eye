@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Video</title>
+    <script>
+        function displayResults() {
+            // Retrieve the JSON response
+            fetch('http://localhost:8000/upload', {
+                method: 'POST',
+                body: new FormData(document.getElementById('upload-form')),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Get the table element by its ID
+                const table = document.getElementById('results-table');
+
+                // Create table rows from the JSON data
+                data.forEach(item => {
+                    const row = table.insertRow();
+                    const plateCell = row.insertCell(0);
+                    const scoreCell = row.insertCell(1);
+                    plateCell.innerHTML = item['License Plate'];
+                    scoreCell.innerHTML = item['Score'];
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Upload a Video</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".mp4">
+        <br><br>
+        <input type="button" value="Upload and Process Video" onclick="displayResults()">
+    </form>
+    <br>
+    <h2>Results:</h2>
+    <table id="results-table" border="1">
+        <thead>
+            <tr>
+                <th>License Plate</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows will be inserted here using JavaScript -->
+        </tbody>
+    </table>
+</body>
+</html>
