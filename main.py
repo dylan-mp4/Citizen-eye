@@ -2,7 +2,7 @@
 This script defines a FastAPI app that processes a video to detect vehicles and their license plates.
 The app has an endpoint '/upload/' that accepts an MP4 video file and returns a JSON response containing unique license plates and their scores.
 """
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from ultralytics import YOLO
@@ -89,12 +89,14 @@ def process_video(video_path):
 
 @app.post("/upload/")
 
-async def upload_video(file: UploadFile):
+async def upload_video(file: UploadFile = File(...), start_geolocation: str = Form(None), end_geolocation: str = Form(None)):
     """
     Uploads a video file and processes it to extract unique license plates and their scores.
 
     Args:
         file (UploadFile): The video file to be uploaded.
+        start_geolocation (str, optional): The geolocation where the video recording started. Defaults to None.
+        end_geolocation (str, optional): The geolocation where the video recording ended. Defaults to None.
 
     Returns:
         JSONResponse: A JSON response containing the unique license plates and their scores.
@@ -108,7 +110,7 @@ async def upload_video(file: UploadFile):
     unique_license_plates = process_video('uploaded_video.mp4')
 
     # Print the unique license plates and their scores
-    response_data = [{"License Plate": plate, "Score": score} for plate, score in unique_license_plates.items()]
+    response_data = [{"License Plate": plate, "Score": score, "Start Geolocation": start_geolocation, "End Geolocation": end_geolocation} for plate, score in unique_license_plates.items()]
 
     return JSONResponse(content=response_data)
 
