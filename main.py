@@ -11,7 +11,7 @@ import util
 app = FastAPI()
 
 # Define the CORS settings
-origins = ["*"]  # You can configure this to allow requests only from specific origins.
+origins = ["*"]
 
 # Use the CORS middleware with the defined origins
 app.add_middleware(
@@ -89,7 +89,7 @@ def process_video(video_path):
 
 @app.post("/upload/")
 
-async def upload_video(file: UploadFile = File(...), start_geolocation: str = Form(None), end_geolocation: str = Form(None)):
+async def upload_video(file: UploadFile = File(...), start_latitude: str = Form(None), start_longitude: str = Form(None) , end_latitude: str = Form(None), end_longitude: str = Form(None)):
     """
     Uploads a video file and processes it to extract unique license plates and their scores.
 
@@ -110,8 +110,8 @@ async def upload_video(file: UploadFile = File(...), start_geolocation: str = Fo
     unique_license_plates = process_video('uploaded_video.mp4')
 
     # Print the unique license plates and their scores
-    response_data = [{"License Plate": plate, "Score": score, "Start Geolocation": start_geolocation, "End Geolocation": end_geolocation} for plate, score in unique_license_plates.items()]
-
+    response_data = [{"License Plate": plate, "Score": round(score * 100, 2), "start_latitude": start_latitude, "start_longitude": start_longitude, "end_latitude": end_latitude, "end_longitude": end_longitude} for plate, score in unique_license_plates.items()]
+    print(response_data)
     return JSONResponse(content=response_data)
 
 if __name__ == "__main__":
