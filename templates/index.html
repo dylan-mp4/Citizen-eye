@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Admin Dashboard</h1>
+        <form action="/clear" method="post" class="mt-4">
+            <button type="submit" class="btn btn-danger">Clear Data</button>
+        </form>
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>License Plate</th>
+                    <th>Score</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Car Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row['License Plate'] }}</td>
+                    <td>{{ row['Score'] }}</td>
+                    <td>
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ row['start_latitude'] }},{{ row['start_longitude'] }}" target="_blank">
+                            {{ row['start_latitude'] }}, {{ row['start_longitude'] }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ row['end_latitude'] }},{{ row['end_longitude'] }}" target="_blank">
+                            {{ row['end_latitude'] }}, {{ row['end_longitude'] }}
+                        </a>
+                    </td>
+                    <td><img src="{{ row['Car Image'] }}" alt="Car Image" width="100"></td>
+                    <td> <!-- Add the delete button here -->
+                        <form action="/delete" method="post" class="d-inline">
+                            <input type="hidden" name="index" value="{{ loop.index0 }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+$(document).ready(function() {
+    function refreshData() {
+        $.getJSON('/data', function(data) {
+            var tbody = $('tbody');
+            tbody.empty();
+            data.forEach(function(row, index) {
+                var tr = $('<tr>');
+                tr.append('<td>' + row['License Plate'] + '</td>');
+                tr.append('<td>' + row['Score'] + '</td>');
+                var startLink = '<a href="https://www.google.com/maps/search/?api=1&query=' + row['start_latitude'] + ',' + row['start_longitude'] + '" target="_blank">' +
+                    row['start_latitude'] + ', ' + row['start_longitude'] + '</a>';
+                tr.append('<td>' + startLink + '</td>');
+                var endLink = '<a href="https://www.google.com/maps/search/?api=1&query=' + row['end_latitude'] + ',' + row['end_longitude'] + '" target="_blank">' +
+                    row['end_latitude'] + ', ' + row['end_longitude'] + '</a>';
+                tr.append('<td>' + endLink + '</td>');
+                tr.append('<td>' + row['end_latitude'] + '</td>');
+                tr.append('<td>' + row['end_longitude'] + '</td>');
+                tr.append('<td><img src="' + row['Car Image'] + '" alt="Car Image" width="100"></td>');
+                var deleteButton = '<form action="/delete" method="post" class="d-inline">' +
+                    '<input type="hidden" name="index" value="' + index + '">' +
+                    '<button type="submit" class="btn btn-danger">Delete</button>' +
+                    '</form>';
+                tr.append('<td>' + deleteButton + '</td>');
+                tbody.append(tr);
+            });
+        });
+    }
+});
+</script>
+</html>
