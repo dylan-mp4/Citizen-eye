@@ -5,7 +5,7 @@
     <script>
         function displayResults() {
             // Retrieve the JSON response
-            fetch('https://8854-209-35-86-205.ngrok-free.app/upload/', {
+            fetch('http://localhost:8000/upload', {
                 method: 'POST',
                 body: new FormData(document.getElementById('upload-form')),
             })
@@ -20,9 +20,9 @@
                     const plateCell = row.insertCell(0);
                     const scoreCell = row.insertCell(1);
                     const imageCell = row.insertCell(2);
-                    plateCell.innerHTML = item['License Plate'];
-                    scoreCell.innerHTML = item['Score'];
-                    imageCell.innerHTML = `<img src="data:image/png;base64,${item['car_image']}" width="100">`;
+                    plateCell.innerHTML = item['licence_plate'];
+                    scoreCell.innerHTML = item['score'];
+                    imageCell.innerHTML = `<img src="${item['car_image']}" width="100">`;
                 });
             })
             .catch(error => {
