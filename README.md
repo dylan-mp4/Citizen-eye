@@ -1,0 +1,73 @@
+# Citizen's Eye - FYP
+
+Backend of the Citizen's Eye Final Year Project, processes videos of cars to detect licence plates and returns Licence Plate Data, Images of the car, and confidence results
+
+## Installation 
+### Venv
+```bash
+python3 -m venv env
+```
+Then activate using:
+#### On windows
+```bash
+.\env\Scripts\activate
+```
+#### On Linux
+```bash
+source env/bin/activate
+```
+### Pre Requisites 
+#### CUDA
+This project is intended to run using CUDA architecture, along with a matching PyTorch version
+CUDA drivers can be obtained if not already installed from:
+https://developer.nvidia.com/cuda-downloads - please note that PyTorch currently only supports CUDA versions 12.1 and 11.8
+#### PyTorch
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+```
+To test if PyTorch and CUDA was installed successfully:
+```bash
+python testgpy.py
+```
+### Reqs
+```bash
+pip install -r requirements.txt
+```
+## Run
+```bash
+python main.py
+``` 
+## Tech Stack
+
+**Client:** Dart/Flutter
+
+**Server:** Uvicorn, FastAPI
+## API Reference
+
+#### Upload File
+
+```http
+  POST /upload
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `file` | `video` | **Required**. video to be processed |
+| `start_latitude` | `string` | **Optional**. starting GPS lat |
+| `start_longitude` | `string` | **Optional**. starting GPS lon |
+| `end_latitude` | `string` | **Optional**. ending GPS lat |
+| `end_longitude` | `string` | **Optional**. starting GPS lat |
+
+### Returns
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `licence_plate` | `string` | Licence plate text |
+| `score` | `number(float)` | decimal score / confidence of plate being correct |
+| `car_image` | `string` | Base64 represented image includes starting header |
+| `start_latitude` | `string` | **Optional**. starting GPS lat |
+| `start_longitude` | `string` | **Optional**. starting GPS lon |
+| `end_latitude` | `string` | **Optional**. ending GPS lat |
+| `end_longitude` | `string` | **Optional**. starting GPS lat |
+## Author
+
+- [@dylan-mp4](https://github.com/dylan-mp4)
