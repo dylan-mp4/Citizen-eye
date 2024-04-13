@@ -13,16 +13,30 @@
             .then(data => {
                 // Get the table element by its ID
                 const table = document.getElementById('results-table');
-
+    
+                // Clear the table
+                table.innerHTML = '';
+    
+                // Create table headers from the keys of the first item in the JSON response
+                const thead = table.createTHead();
+                const headerRow = thead.insertRow();
+                for (let key in data[0]) {
+                    const th = document.createElement('th');
+                    th.textContent = key;
+                    headerRow.appendChild(th);
+                }
+    
                 // Create table rows from the JSON data
                 data.forEach(item => {
                     const row = table.insertRow();
-                    const plateCell = row.insertCell(0);
-                    const scoreCell = row.insertCell(1);
-                    const imageCell = row.insertCell(2);
-                    plateCell.innerHTML = item['licence_plate'];
-                    scoreCell.innerHTML = item['score'];
-                    imageCell.innerHTML = `<img src="${item['car_image']}" width="100">`;
+                    for (let key in item) {
+                        const cell = row.insertCell();
+                        if (key === 'car_image') {
+                            cell.innerHTML = `<img src="${item[key]}" width="100">`;
+                        } else {
+                            cell.textContent = item[key];
+                        }
+                    }
                 });
             })
             .catch(error => {
