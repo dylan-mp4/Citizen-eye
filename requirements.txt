@@ -8,3 +8,4 @@ opencv_python_headless==4.8.1.78
 pandas==2.2.1
 ultralytics==8.1.19
 uvicorn==0.29.0
+python-multipart==0.0.9
