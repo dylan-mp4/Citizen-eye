@@ -162,7 +162,9 @@ cython_debug/
 
 sample.mp4
 sample1.mp4
-uploaded_video.mp4
+sample2.mp4
+
 ./vscode
 XRecorder_27022024_120550.mp4
 requirements.txt.back.2
+uploads/*
