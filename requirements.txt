@@ -1,11 +1,10 @@
 aiofiles==23.2.1
-easyocr==1.7.0
+easyocr==1.7.1
 fastapi==0.110.1
 Flask==3.0.3
 numpy==1.26.4
 opencv_python==4.7.0.72
 opencv_python_headless==4.8.1.78
 pandas==2.2.1
-torch==2.2.1+cu121
 ultralytics==8.1.19
 uvicorn==0.29.0
