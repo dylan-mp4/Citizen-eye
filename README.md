@@ -33,10 +33,20 @@ python testgpy.py
 ```bash
 pip install -r requirements.txt
 ```
-## Run
+## Run 1 instance
 ```bash
 python main.py
 ``` 
+## Run multiple instances
+### Windows
+```bash
+uvicorn main:app --workers 3
+```
+### Linux
+You may have to install the gunicorn package first as it is not in reqs
+```bash
+gunicorn -w 3 -k uvicorn.workers.UvicornWorker main:app
+```
 ## Tech Stack
 
 **Client:** Dart/Flutter
