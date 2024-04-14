@@ -48,7 +48,11 @@ async def process_video(video_path):
             await process_frame(frame, frame_nmr, unique_licence_plates, cars_) # Start license plate detection and recognition
     cap.release()
     end_time = time.time()
-    print(f"Elapsed time to process video: {end_time - start_time} seconds")
+    elapsed_time = end_time - start_time
+    avg_time = elapsed_time / frame_nmr if frame_nmr > 0 else 0
+    print(f"Elapsed time to process video: {elapsed_time} seconds")
+    print(f"Average time per frame: {avg_time} seconds")
+    
     return unique_licence_plates
 
 async def process_frame(frame, frame_nmr, unique_licence_plates, cars_):
@@ -144,7 +148,6 @@ async def upload_video(file: UploadFile = File(...), start_latitude: str = Form(
     timestamp = datetime.now().strftime('%d-%m-%H%M%S')
     id = str(uuid.uuid4())
     filename = f'uploads/{timestamp}_{id}.mp4'
-    
     async with aiofiles.open(filename, 'wb') as f:
         await f.write(await file.read())
     print("processing video", filename)
