@@ -1,4 +1,5 @@
-name: Python application test 1
+name: Python application test with GitHub Actions
+
 on:
   push:
     branches: [ main ]
@@ -11,16 +12,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - name: Set up Python 3.12
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v3
       with:
         python-version: 3.12
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install torch torchvision torchaudio
         pip install -r requirements.txt
-    - name: Lint with Pylint
+    - name: Run Pylinter
+      uses: programmingwithalex/pylinter@v1.4.3
+      with:
+        python-root: '.'
+    - name: Run main.py
       run: |
-        pip install pylint
-        pylint **/*.py
+        python main.py
