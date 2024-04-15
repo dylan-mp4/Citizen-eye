@@ -1,5 +1,4 @@
-name: Python application test with GitHub Actions
-
+name: Python application test 1
 on:
   push:
     branches: [ main ]
