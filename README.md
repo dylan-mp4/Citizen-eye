@@ -27,7 +27,7 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 ```
 To test if PyTorch and CUDA was installed successfully:
 ```bash
-python testgpy.py
+python testgpu.py
 ```
 ### Reqs
 ```bash
