@@ -13,16 +13,21 @@ import time
 import os
 import uuid
 from datetime import datetime
+from pyinstrument import Profiler
 
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 reader = easyocr.Reader(['en'], gpu=True)
-##Initilize Model port to GPU -- This will cause failure if no CUDA device available
-vehicle_model = YOLO('yolov8n.pt').to('cuda')
-plate_model = YOLO('plate_model.pt').to('cuda')
-torch.backends.cudnn.benchmark = True
-torch.backends.cudnn.enabled = True
+if torch.cuda.is_available():
+    vehicle_model = YOLO('yolov8n.pt').to('cuda')
+    plate_model = YOLO('plate_model.pt').to('cuda')
+    torch.backends.cudnn.benchmark = True
+    torch.backends.cudnn.enabled = True
+else:
+    vehicle_model = YOLO('yolov8n.pt')
+    plate_model = YOLO('plate_model.pt')
+    
 modelclass = [2, 3, 5, 7] #COCO model classes for car, truck, bus, motorbike
 
 dict_ch_int = {'O': '0', 'I': '1', 'J': '3', 'A': '4', 'G': '6', 'S': '5'} # Mapping for characters to integers
@@ -30,7 +35,12 @@ dict_int_char = {'0': 'O', '1': 'I', '3': 'J', '4': 'A', '6': 'G', '5': 'S'} # M
 
 #Process the video frame by frame and returns a dictionary of unique licence plates with their scores and base64 of image.
 async def process_video(video_path):
-    start_time = time.time()
+    # performance test code
+    # profiler = Profiler()
+    # profiler.start()
+    # start_time = time.time()
+    # /performance test code
+    
     cap = cv2.VideoCapture(video_path) # Open the video file
     unique_licence_plates = {} # Dictionary to store unique licence plates
     frame_nmr = -1
@@ -47,8 +57,18 @@ async def process_video(video_path):
                     cars_.append([x1, y1, x2, y2, score]) # Append the vehicle coordinates to the list
             await process_frame(frame, frame_nmr, unique_licence_plates, cars_) # Start license plate detection and recognition
     cap.release()
-    end_time = time.time()
-    print(f"Elapsed time to process video: {end_time - start_time} seconds")
+    
+    #performance test code
+    # end_time = time.time()
+    # elapsed_time = end_time - start_time
+    # avg_time = elapsed_time / frame_nmr if frame_nmr > 0 else 0
+    # print(f"Elapsed time to process video: {elapsed_time} seconds")
+    # print(f"Average time per frame: {avg_time} seconds")
+    # profiler.stop()
+    # profiler.print()
+    # profiler.write_html("./profiler.html")
+    # /performance test code
+    
     return unique_licence_plates
 
 async def process_frame(frame, frame_nmr, unique_licence_plates, cars_):
@@ -144,12 +164,12 @@ async def upload_video(file: UploadFile = File(...), start_latitude: str = Form(
     timestamp = datetime.now().strftime('%d-%m-%H%M%S')
     id = str(uuid.uuid4())
     filename = f'uploads/{timestamp}_{id}.mp4'
-    
     async with aiofiles.open(filename, 'wb') as f:
         await f.write(await file.read())
     print("processing video", filename)
+
     unique_licence_plates = await process_video(filename)
-    
+
     response_data = [
         {
             "licence_plate": plate, "score": round(score['score'] * 100, 2), 
