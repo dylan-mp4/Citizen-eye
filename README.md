@@ -7,7 +7,7 @@ Backend of the Citizen's Eye Final Year Project, processes videos of cars to det
 ```bash
 git clone https://github.com/dylan-mp4/Citizen-eye.git
 ```
-### Venv
+### Create and activate environment
 ```bash
 python3 -m venv env
 ```
