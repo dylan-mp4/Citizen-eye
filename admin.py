@@ -1,3 +1,4 @@
+# Deprecated admin panel - not used in the final version of the project
 from flask import Flask, render_template, request, redirect, url_for
 from flask.json import jsonify
 import pandas as pd
