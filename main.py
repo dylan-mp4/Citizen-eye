@@ -9,11 +9,11 @@ import easyocr
 import string
 import aiofiles
 import asyncio
-import time
 import os
 import uuid
 from datetime import datetime
-from pyinstrument import Profiler
+# performance test code
+# from pyinstrument import Profiler
 
 
 app = FastAPI()
